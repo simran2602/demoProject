@@ -14,13 +14,13 @@ const addProduct = async (req, res) => {
             res.status(200).json({
                 status: true,
                 message: "product added succesfully",
-                prodData
+                data:prodData
             });
         })).catch((err) => {
             res.status(500).json({
                 status: true,
                 message: "product error",
-                err
+                error:err
             });
         });
 };
@@ -88,13 +88,13 @@ const getProduct = (req, res, next) => {
     ]).then(((prodData) => {
         res.status(200).json({
             status: true,
-            msg: "product view succesfully :)",
-            prodData
+            msg: "product view succesfully ",
+            data:prodData
         }).catch((err) => {
             res.status(500).json({
                 status: false,
-                err: "error while fetching product details :(",
-                err
+                err: "error while fetching product details ",
+                error:err
             })
         })
     }))
@@ -129,22 +129,50 @@ const getNonUserProd = (req, res, next) => {
     ]).then(((prodData) => {
         res.status(200).json({
             status: true,
-            msg: "Non User Prod view succesfully :)",
-            prodData,
-            password: new mongoose.Types.ObjectId(req.user.password)
+            msg: "Non User Prod view succesfully ",
+            data:prodData,
+            // console.log("password",req.user.password)
+           
         })
     })).catch((err) => {
         res.status(500).json({
             status: false,
-            error: "Non User Prod view failure :(",
-            err
+            msg: "Non User Prod view failure ",
+            error:err
         })
     })
+}
+
+const updateProd=async (req,res,next)=>{
+    await product.findOneAndUpdate(
+        {
+            _id:new mongoose.Types.ObjectId(req.params.id)
+        },
+        {
+            $set:{
+                ...req.body
+            }
+        }
+    ).then(((prodData)=>{
+        res.status(200).json({
+            status:true,
+            msg:"product updated succesfully ",
+            data:prodData
+        }).catch((err)=>{
+            res.status(500).json({
+                status:false,
+                msg:"Sorry! product not updated ",
+                error:err
+            })
+        })
+    }))
+
 }
 module.exports = {
     addProduct,
     getProduct,
-    getNonUserProd
+    getNonUserProd,
+    updateProd
 
 
 }

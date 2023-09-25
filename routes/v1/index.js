@@ -11,6 +11,7 @@ var express = require('express');
 var router = express.Router();
 var user = require("../../Controller/user");
 var product = require("../../Controller/product");
+var wishlist = require('../../Controller/wishlist');
 
 //calling our middleware
 var middleware = require('../../routes/service/middleware').middleware;
@@ -29,6 +30,8 @@ router.use(middleware);
 router.put('/user/update/:id', user.updateUser);
 router.delete('/user/delete/:id', user.deleteUser);
 router.get('/user/get-non-user-prod',product.getNonUserProd);
+router.put('/user/update/:id', product.updateProd);
+router.post('/user/add-to-wishlist',wishlist.addToWishlist)
 
 
 

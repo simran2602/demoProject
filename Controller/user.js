@@ -42,15 +42,15 @@ const userRegister = async (req, res) => {
 
             res.status(200).json({
                 status: true,
-                message: "user register successfully :)",
-                userData
+                message: "user register successfully ",
+                data:userData
             });
         }).catch((err) => {
             console.log("111", err)
             res.status(500).json({
                 status: false,
-                message: "Server error! Please try again ! :(",
-                err
+                message: "Server error! Please try again ! ",
+                error:err
 
             });
         });
@@ -138,14 +138,14 @@ const getUser = (req, res, next) => {
     ]).then(((userData) => {
         res.status(200).json({
             status: true,
-            message: "view succesfull :)",
-            userData
+            message: "view succesfull ",
+            data:userData
         });
     })).catch((err) => {
         res.status(500).json({
             status: false,
-            message: "user not found :(",
-            err
+            message: "user not found ",
+            error:err
         });
     });
 
@@ -166,15 +166,15 @@ const updateUser = (req, res, next) => {
     ).then(((userData) => {
         res.status(200).json({
             status: true,
-            msg: 'user updated succesfully :)',
-            userData
+            msg: 'user updated succesfully ',
+            data:userData
         })
     }))
-        .catch((error) => {
+        .catch((err) => {
             res.status(200).json({
                 status: false,
-                error: 'user not updated :(',
-                error,
+                error: 'user not updated ',
+                error:err
             })
         })
 }
@@ -189,14 +189,14 @@ const deleteUser = (req, res, next) => {
         res.status(200).json({
             status: true,
             isDeleted: true,
-            msg: "user deleted succesfully :)",
-            use
+            msg: "user deleted succesfully ",
+            data:userData
         })
-    })).catch((error) => {
+    })).catch((err) => {
         res.status(500).json({
             status: false,
-            error: "user not deleted :(",
-            error
+            msg: "user not deleted ",
+            error:err
         })
     })
 
@@ -212,6 +212,4 @@ module.exports = {
     updateUser,
     deleteUser,
     getTokenData,
-    // getNonUserProd
-
 };
