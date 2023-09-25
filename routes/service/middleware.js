@@ -19,7 +19,7 @@ const permission = [
 ]
 
 //definition of middleware
-user.middleware = (req, res, next) => {
+user.middleware = async (req, res, next) => {
     if (permission.filter(item => item.url == req.url).length > 0) {
         next();
     } else {
@@ -28,12 +28,14 @@ user.middleware = (req, res, next) => {
             return res.status(response.errorCode.requiredError).json({ error: "No Credentials Send", status: false, credentials: false })
         } else {
             let authorization = req.headers.authorization;
+            console.log("authorization", authorization)
             let userData = null;
 
             let usertype = typeof (req.headers.usertype) != "undefined" ? req.headers.usertype : "user"
 
             if (usertype == "user") {
-                userData = userController.getTokenData(authorization)
+                userData = await userController.getTokenData(authorization)
+                // console.log("userDatsssa",userData)
             }
             //now we have user data which we can use further
 
@@ -53,8 +55,7 @@ user.middleware = (req, res, next) => {
 
 }
 
-module.exports = {
-    user
-}
+//exporting user without curly braces because user is itself a object.
+module.exports = user
 
 

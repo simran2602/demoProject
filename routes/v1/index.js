@@ -15,17 +15,20 @@ var product = require("../../Controller/product");
 //calling our middleware
 var middleware = require('../../routes/service/middleware').middleware;
 
-router.post("/user/register",user.userRegister);
-router.get("/user/get-user",user.getUser);
+router.post("/user/register", user.userRegister);
+router.get("/user/get-user", user.getUser);
 
-router.post("/user/add-prod",product.addProduct);
+router.post("/user/add-prod", product.addProduct);
+router.get("/user/get-prod", product.getProduct);
+
 
 
 router.use(middleware);
 
 //from here after using middleware all defined routes will use middleware surely.
-router.put('/user/update/:id',user.updateUser);
-router.delete('/user/delete/:id',user.deleteUser);
+router.put('/user/update/:id', user.updateUser);
+router.delete('/user/delete/:id', user.deleteUser);
+router.get('/user/get-non-user-prod',product.getNonUserProd);
 
 
 

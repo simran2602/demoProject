@@ -10,6 +10,12 @@ const productSchema = new mongoose.Schema({
     prodImg: {
         type: String
     },
+    prodAmt: {
+        type:Number
+    },
+    prodCategory: {
+        type:String
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId
     },

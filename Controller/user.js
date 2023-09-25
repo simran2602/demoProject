@@ -13,12 +13,20 @@ function generateToken(userData) {
 }
 
 //get token data
-function getTokenData(authorization) {
-    return userModel.findOne({
+// function getTokenData(authorization) {
+//     const userData = User.findOne({
+//         token: authorization
+//     }).exec()
+//     console.log("userData",userData)
+//     return userData
+// }
+const getTokenData = async (authorization) => {
+    const userData = await User.findOne({
         token: authorization
-    })
+    }).exec()
+    // console.log("userData", userData)
+    return userData
 }
-
 
 const userRegister = async (req, res) => {
     var newPassword = await bcrypt.hash(req.body.password, saltRounds);
@@ -34,14 +42,14 @@ const userRegister = async (req, res) => {
 
             res.status(200).json({
                 status: true,
-                message: "user register successfully",
+                message: "user register successfully :)",
                 userData
             });
         }).catch((err) => {
             console.log("111", err)
             res.status(500).json({
                 status: false,
-                message: "Server error! Please try again !",
+                message: "Server error! Please try again ! :(",
                 err
 
             });
@@ -75,8 +83,8 @@ const getUser = (req, res, next) => {
         {
             $lookup: {
                 from: "products",
-                localField: "_id",
                 foreignField: "userId",
+                localField: "_id",
                 as: "Product",
                 pipeline: [
                     {
@@ -84,15 +92,24 @@ const getUser = (req, res, next) => {
                             isDeleted: false
                         }
                     },
-                    {
-                        $project: {
-                            userId: 0,
-                            status: 0,
-                            isDeleted: 0,
-                            createdOn: 0,
-                            __v: 0
-                        }
-                    }
+                    // {
+                    //     $group: {
+                    //         _id: "$prodCategory",
+                    //         //totalAmt: { $sum: "$prodAmt" }
+
+
+                    //     }
+                    // },
+
+                    // {
+                    //     $project: {
+                    //         userId: 0,
+                    //         status: 0,
+                    //         isDeleted: 0,
+                    //         createdOn: 0,
+                    //         __v: 0
+                    //     }
+                    // }
                 ]
             }
         },
@@ -101,7 +118,8 @@ const getUser = (req, res, next) => {
         },
         {
             $addFields: {
-                productDesc: "$Product.prodDesc"
+                productDesc: "$Product.prodDesc",
+                //prodamt:"$product.prodCategory"
             },
 
 
@@ -113,25 +131,27 @@ const getUser = (req, res, next) => {
                 status: 0,
                 isDeleted: 0,
                 createdOn: 0,
-                __v: 0, Product: 0
+                __v: 0, //Product: 0
             }
         }
 
-    ]).then(((data) => {
+    ]).then(((userData) => {
         res.status(200).json({
             status: true,
-            message: "view succesfull",
-            data
+            message: "view succesfull :)",
+            userData
         });
     })).catch((err) => {
         res.status(500).json({
             status: false,
-            message: "user not found",
+            message: "user not found :(",
             err
         });
     });
 
 };
+
+
 
 const updateUser = (req, res, next) => {
     User.findOneAndUpdate(
@@ -143,17 +163,17 @@ const updateUser = (req, res, next) => {
                 ...req.body
             }
         }
-    ).then(((data) => {
+    ).then(((userData) => {
         res.status(200).json({
             status: true,
-            msg: 'user updated succesfully',
-            data
+            msg: 'user updated succesfully :)',
+            userData
         })
     }))
         .catch((error) => {
             res.status(200).json({
                 status: false,
-                error: 'user not updated',
+                error: 'user not updated :(',
                 error,
             })
         })
@@ -165,17 +185,17 @@ const deleteUser = (req, res, next) => {
             _id: new mongoose.Types.ObjectId(req.params.id)
         },
 
-    ).then(((data) => {
+    ).then(((userData) => {
         res.status(200).json({
             status: true,
             isDeleted: true,
-            msg: "user deleted succesfully",
-            data
+            msg: "user deleted succesfully :)",
+            use
         })
     })).catch((error) => {
         res.status(500).json({
             status: false,
-            error: "user not deleted",
+            error: "user not deleted :(",
             error
         })
     })
@@ -192,5 +212,6 @@ module.exports = {
     updateUser,
     deleteUser,
     getTokenData,
-    
+    // getNonUserProd
+
 };
