@@ -9,7 +9,7 @@ const saltRounds = 10;
 
 //generate jsonwebtoken
 function generateToken(userData) {
-    return jwt.sign(userData, "userToken")
+     return  jwt.sign(userData, "userToken")
 }
 
 //get token data
@@ -23,7 +23,7 @@ function generateToken(userData) {
 const getTokenData = async (authorization) => {
     const userData = await User.findOne({
         token: authorization
-    }).exec()
+    }).exec() //handling exceptions here also can be done by then and catch
     // console.log("userData", userData)
     return userData
 }
@@ -73,7 +73,7 @@ const userRegister = async (req, res) => {
 // };
 
 
-const getUser = (req, res, next) => {
+const getUser = (req, res) => {
     User.aggregate([
         {
             $match: {
@@ -153,10 +153,13 @@ const getUser = (req, res, next) => {
 
 
 
-const updateUser = (req, res, next) => {
+const updateUser = (req, res) => {
     User.findOneAndUpdate(
         {
-            _id: new mongoose.Types.ObjectId(req.params.id)
+            //_id: new mongoose.Types.ObjectId(req.params.id), here we are passing _id by using params
+            //because its come under middleware we can directly use user id  by below code
+            _id: req.user._id
+            
         },
         {
             $set: {
@@ -182,7 +185,8 @@ const updateUser = (req, res, next) => {
 const deleteUser = (req, res, next) => {
     User.findOneAndDelete(
         {
-            _id: new mongoose.Types.ObjectId(req.params.id)
+            // _id: new mongoose.Types.ObjectId(req.params.id)
+            _id:req.user._id
         },
 
     ).then(((userData) => {

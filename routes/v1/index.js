@@ -27,8 +27,9 @@ router.get("/user/get-prod", product.getProduct);
 router.use(middleware);
 
 //from here after using middleware all defined routes will use middleware surely.
-router.put('/user/update/:id', user.updateUser);
-router.delete('/user/delete/:id', user.deleteUser);
+// router.put('/user/update/:id', user.updateUser); by using params
+router.put('/user/update/', user.updateUser);
+router.delete('/user/delete/', user.deleteUser);
 router.get('/user/get-non-user-prod',product.getNonUserProd);
 router.put('/user/update/:id', product.updateProd);
 router.post('/user/add-to-wishlist',wishlist.addToWishlist)
