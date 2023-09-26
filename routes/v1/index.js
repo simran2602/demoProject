@@ -33,6 +33,7 @@ router.delete('/user/delete/', user.deleteUser);
 router.get('/user/get-non-user-prod',product.getNonUserProd);
 router.put('/user/update/:id', product.updateProd);
 router.post('/user/add-to-wishlist',wishlist.addToWishlist)
+router.get('/user/get-wishlist/',product.getWishlist)
 
 
 

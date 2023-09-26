@@ -14,13 +14,13 @@ const addProduct = async (req, res) => {
             res.status(200).json({
                 status: true,
                 message: "product added succesfully",
-                data:prodData
+                data: prodData
             });
         })).catch((err) => {
             res.status(500).json({
                 status: true,
                 message: "product error",
-                error:err
+                error: err
             });
         });
 };
@@ -64,16 +64,16 @@ const getProduct = (req, res, next) => {
         {
             $unwind: "$user"
         },
-        {
-            $group: {
-                _id: "$prodCategory",
-                count: {
-                    $count: {}
-                }
-                //$count:{}
+        // {
+        //     $group: {
+        //         _id: "$prodCategory",
+        //         count: {
+        //             $count: {}
+        //         }
+        //         //$count:{}
 
-            }
-        },
+        //     }
+        // },
         {
             $project: {
                 status: 0,
@@ -89,15 +89,83 @@ const getProduct = (req, res, next) => {
         res.status(200).json({
             status: true,
             msg: "product view succesfully ",
-            data:prodData
+            data: prodData
         }).catch((err) => {
             res.status(500).json({
                 status: false,
                 err: "error while fetching product details ",
-                error:err
+                error: err
             })
         })
     }))
+
+}
+
+//view wishlist from product
+
+const getWishlist = (req, res) => {
+    product.aggregate([
+
+        {
+            $lookup: {
+                from: "wishlists",
+                foreignField: "prodId",
+                localField: "_id",
+                as: "WishListed",
+                // pipeline:[
+                //     {
+                //         $unwind:"$WishListed"
+                //     },
+                //     {
+                //         $addFields:{
+                //             wishlist:"$WishListed"
+                //         }
+                //     }
+                //     // {
+                //     //     $cond: {
+                //     //         if: { $gt: [ WishListed.length , 0 ] },then :{$addFields:{WishListed:true}}
+                //     //     }
+                //     // }
+
+                // ]
+
+
+            },
+           
+
+
+        },
+        // {
+        //     $unwind:"$WishListed"
+        // },
+        {
+            $addFields:{
+                wishlist:{$cond:{if:{$gt:[{$size:"$WishListed"},0]},then:true,else:false}
+                    
+                }
+            }
+        },
+        {
+            $project:{
+                WishListed:0
+            }
+        }
+        
+
+    ]).then((prodData) => {
+        // if (WishListed.length > 0) { }
+        res.status(200).json({
+            status: true,
+            msg: "view wishlisted items successful",
+            data: prodData
+        })
+    }).catch((err) => {
+        res.status(500).json({
+            status: false,
+            msg: "not able to view wishlisted item",
+            error: err
+        })
+    })
 
 }
 
@@ -130,39 +198,40 @@ const getNonUserProd = (req, res, next) => {
         res.status(200).json({
             status: true,
             msg: "Non User Prod view succesfully ",
-            data:prodData,
+            data: prodData,
             // console.log("password",req.user.password)
-           
+
         })
     })).catch((err) => {
         res.status(500).json({
             status: false,
             msg: "Non User Prod view failure ",
-            error:err
+            error: err
         })
     })
 }
 
-const updateProd=async (req,res,next)=>{
+
+const updateProd = async (req, res, next) => {
     await product.findOneAndUpdate(
         {
-            _id:new mongoose.Types.ObjectId(req.params.id)
+            _id: new mongoose.Types.ObjectId(req.params.id)
         },
         {
-            $set:{
+            $set: {
                 ...req.body
             }
         }
-    ).then(((prodData)=>{
+    ).then(((prodData) => {
         res.status(200).json({
-            status:true,
-            msg:"product updated succesfully ",
-            data:prodData
-        }).catch((err)=>{
+            status: true,
+            msg: "product updated succesfully ",
+            data: prodData
+        }).catch((err) => {
             res.status(500).json({
-                status:false,
-                msg:"Sorry! product not updated ",
-                error:err
+                status: false,
+                msg: "Sorry! product not updated ",
+                error: err
             })
         })
     }))
@@ -172,7 +241,8 @@ module.exports = {
     addProduct,
     getProduct,
     getNonUserProd,
-    updateProd
+    updateProd,
+    getWishlist
 
 
 }

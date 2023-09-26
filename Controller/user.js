@@ -38,7 +38,7 @@ const userRegister = async (req, res) => {
     })
         .save()
         .then((userData) => {
-            console.log("111");
+            //console.log("111");
 
             res.status(200).json({
                 status: true,
